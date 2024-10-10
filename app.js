@@ -14,7 +14,18 @@ const storage = multer.diskStorage({
   }
 })
 
-const fileUpload = multer({ storage })
+// file filter
+const fileFilter = (req, file, cb) => {
+  console.log(file)
+  if (file.mimetype.split("/")[0] === "image") {
+    cb(null, true)
+  }
+  else {
+    cb(new Error("File type is not correct"), false)
+  }
+}
+
+const fileUpload = multer({ storage, fileFilter })
 
 
 app.post('/multi-upload', fileUpload.array("docs", 5), (req, res) => {
